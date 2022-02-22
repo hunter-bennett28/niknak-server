@@ -44,6 +44,11 @@ public class UserController {
         this.conversationRepo = conversationRepo;
     }
 
+    /**
+     * Gets a single user
+     * @param id - the ID of the user to get
+     * @return a User object
+     */
     @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable String id) {
         try {
@@ -54,6 +59,10 @@ public class UserController {
         }
     }
 
+    /**
+     * Gets all users
+     * @return a List of all Users
+     */
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         try {
@@ -64,6 +73,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Adds a user
+     * @param user - the user to add
+     * @return the User object added
+     */
     @PostMapping
     public ResponseEntity<User> addUser(@RequestBody User user) {
         try {
@@ -74,6 +88,11 @@ public class UserController {
         }
     }
 
+    /**
+     * Updates a user
+     * @param user - the updated User object
+     * @return true if it succeeds
+     */
     @PutMapping
     public ResponseEntity<Boolean> updateUser(@RequestBody User user) {
         try {
@@ -81,10 +100,15 @@ public class UserController {
             return new ResponseEntity<>(userRepo.update(user), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to update user: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Deletes a user
+     * @param id - the ID of the user to delete
+     * @return true if it succeeds
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteUser(@PathVariable String id) {
         try {
@@ -120,7 +144,7 @@ public class UserController {
             return new ResponseEntity<>(userRepo.delete(user), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to update user: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

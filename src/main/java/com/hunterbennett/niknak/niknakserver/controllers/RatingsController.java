@@ -31,8 +31,13 @@ public class RatingsController {
         this.ratingsRepo = ratingsRepo;
     }
 
+    /**
+     * Gets ratings for a given user
+     * @param id - the ID of the user
+     * @return a Ratings object containing info about all user ratings
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Ratings> getPost(@PathVariable String id) {
+    public ResponseEntity<Ratings> getRatings(@PathVariable String id) {
         try {
             return new ResponseEntity<>(ratingsRepo.getByUserId(id), HttpStatus.OK);
         }
@@ -42,6 +47,12 @@ public class RatingsController {
         }
     }
 
+    /**
+     * Eithers adds or updates a rating based on its existence and updates the average rating
+     * @param id - the ID of the user doing the rating
+     * @param userRating - the rating
+     * @return true if it succeeds
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Boolean> addOrUpdateRatings(@PathVariable String id, @RequestBody UserRating userRating) {
         try {
@@ -73,7 +84,7 @@ public class RatingsController {
             return new ResponseEntity<>(ratingsRepo.addOrUpdate(ratings), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to add or update user ratings: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

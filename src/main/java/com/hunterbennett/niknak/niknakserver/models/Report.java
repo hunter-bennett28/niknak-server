@@ -10,6 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model representing a report made against some site content
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Report extends Base {
     @PropertyName("UserID")

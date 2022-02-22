@@ -20,6 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+/**
+ * A base class for all repositories that handles the actual interaction with the Firestore database
+ */
 @Repository
 public class BaseRepository {
     private static final Logger LOG = LoggerFactory.getLogger(BaseRepository.class);
@@ -105,7 +108,13 @@ public class BaseRepository {
         }
     }
 
-    // Custom Queries
+    // Custom Queries - defined here to keep database access encapsulated
+
+    /**
+     * Gets all conversations that include a given user
+     * @param userId - the ID of the user
+     * @return a List of all conversations including the user
+     */
     public List<Conversation> getUserConversations(String userId) {
         List<Conversation> conversations = new ArrayList<>();
         try {
@@ -130,6 +139,11 @@ public class BaseRepository {
         }
     }
 
+    /**
+     * Gets all posts created by a given user
+     * @param userId - the ID of the user
+     * @return a List of Posts created by the user
+     */
     public List<Post> getUserPosts(String userId) {
         List<Post> posts = new ArrayList<>();
         try {
@@ -148,6 +162,11 @@ public class BaseRepository {
         }
     }
 
+    /**
+     * Gets the ratings of a given user
+     * @param userId - the ID of the user
+     * @return a Ratings object containing all UserRatings
+     */
     public Ratings GetRatingsByUserId (String userId){
         Ratings ratings = null;
         try {

@@ -41,12 +41,16 @@ public class ConversationController {
         this.userRepo = userRepo;
     }
 
+    /**
+     * Returns all conversations of a user with the given ID
+     * @param userId - the ID of the user to get
+     * @return A List of all conversations that the user is a part of
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<List<Conversation>> getUserConversations(@PathVariable( required = true) String userId) {
         try {
             
             List<Conversation> allConversations = conversationRepo.getUserConversations(userId);
-            System.out.println("Got conversations for user " + userId + allConversations);
             return new ResponseEntity<>(allConversations, HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to get user conversations: " + e.getMessage());
@@ -54,6 +58,12 @@ public class ConversationController {
         }
     }
 
+    /**
+     * Adds a message to a conversation
+     * @param conversationId - the ID of the conversation to add the messageto
+     * @param message - the message to add
+     * @return true if it succeeds
+     */
     @PostMapping("/{conversationId}")
     public ResponseEntity<Boolean> addMessage(@PathVariable( required = true ) String conversationId,
             @RequestBody( required = true ) Message message) {
@@ -61,7 +71,7 @@ public class ConversationController {
             Conversation convo = conversationRepo.get(new Conversation(conversationId));
             message.setTimestamp(System.currentTimeMillis());
             if (message.getType().equals("image")) {
-
+                // TODO: Add Google cloud storage
             }
             convo.addMessage(message);
             return new ResponseEntity<>(conversationRepo.update(convo), HttpStatus.OK);
@@ -71,6 +81,12 @@ public class ConversationController {
         }
     }
 
+    /**
+     * Updates the timestamp that a user last read a conversation
+     * @param conversationId - the conversation that was read
+     * @param userId - the ID of the user that read it
+     * @return true if the add succeeds
+     */
     @PostMapping("/read/{conversationId}/{userId}")
     public ResponseEntity<Boolean> userReadConversation(@PathVariable( required = true ) String conversationId,
             @PathVariable( required = true ) String userId) {
@@ -79,6 +95,12 @@ public class ConversationController {
         return new ResponseEntity<>(conversationRepo.update(convo), HttpStatus.OK);
     }
 
+    /**
+     * Creates a new conversation between two users
+     * @param senderId - the ID of the person starting the conversation
+     * @param postId - the ID of the person being spoken to
+     * @return the Conversation object
+     */
     @PostMapping("/start/{senderId}/{postId}")
     public ResponseEntity<Conversation> startConversation(@PathVariable( required = true ) String senderId,
             @PathVariable( required = true ) String postId) {

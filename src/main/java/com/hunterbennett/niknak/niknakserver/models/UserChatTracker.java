@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model representing a user in a conversation and their interactions
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class UserChatTracker extends Base {
     @PropertyName("UserId")

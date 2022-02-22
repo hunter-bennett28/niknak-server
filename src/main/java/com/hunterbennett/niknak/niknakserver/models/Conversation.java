@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model representing a conversation between two users
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Conversation extends Base {
     @PropertyName("PostId")

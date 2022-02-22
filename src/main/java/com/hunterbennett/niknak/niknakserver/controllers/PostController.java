@@ -49,6 +49,11 @@ public class PostController {
         this.reportRepo = reportRepo;
     }
     
+    /**
+     * Gets a single post
+     * @param id - the ID of the post to get
+     * @return the Post object
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPost(@PathVariable String id) {
         try {
@@ -60,6 +65,11 @@ public class PostController {
         }
     }
 
+    /**
+     * Gets all posts by a given user
+     * @param id - the ID of the user to query
+     * @return a List of all Posts created by the given user
+     */
     @GetMapping("/user/{id}")
     public ResponseEntity<List<Post>> getUserPosts(@PathVariable String id) {
         try {
@@ -71,6 +81,16 @@ public class PostController {
         }
     }
 
+    /**
+     * Gets a filtered list of posts based on query parameters
+     * @param search - search text
+     * @param category - the category of posts
+     * @param colour - the colour of the post item(s)
+     * @param distance - the distance in KM from the given user to search within
+     * @param userId - the ID of the user searching
+     * @param type - the type of posts to return
+     * @return a filterd List of Post objects that match the query
+     */
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts(
             @RequestParam( required = false, defaultValue = "") String search,
@@ -80,12 +100,12 @@ public class PostController {
             @RequestParam String userId,
             @RequestParam( required = false, defaultValue = "0" ) int type) {
         try {
-            System.out.println("Getting posts: " + search + " " + category + " " + colour + " " + distance + " " + userId + " " + type);
             List<Post> allPosts = postRepo.getAll();
             List<String> colours = colour.isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(colour.split(",")));
             List<String> searchWords = search.isEmpty()
                 ? new ArrayList<>()
                 : new ArrayList<>(Arrays.asList(search.split(" ")));
+
             // Filter out filler keywords to make matches more accurate
             List<String> filteredSearchWords = searchWords.stream().filter(word -> {
                 return !PostController.skippedKeywords.contains(word);
@@ -167,6 +187,11 @@ public class PostController {
         }
     }
 
+    /**
+     * Updates a Post
+     * @param post - the post with new values to update
+     * @return true if it succeeds
+     */
     @PutMapping
     public ResponseEntity<Boolean> updatePost(@RequestBody Post post) {
         try {
@@ -174,10 +199,15 @@ public class PostController {
             return new ResponseEntity<>(postRepo.update(post), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to update post: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Deletes a post
+     * @param id - the ID of the post to delete
+     * @return true if it succeeds
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deletePost(@PathVariable String id) {
         try {
@@ -204,10 +234,15 @@ public class PostController {
             return new ResponseEntity<>(postRepo.delete(post), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to delete post: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * Adds to the view counter of a post
+     * @param id - the ID of the post that was viewed
+     * @return true if it succeeds
+     */
     @PostMapping("/view/{id}")
     public ResponseEntity<Boolean> incrementPostViews(@PathVariable String id) {
         try {
@@ -218,7 +253,7 @@ public class PostController {
             return new ResponseEntity<>(postRepo.update(post), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to increment post views: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

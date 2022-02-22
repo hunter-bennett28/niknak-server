@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model representing the ratings of a user
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Ratings extends Base {
     @PropertyName("UserRatings")

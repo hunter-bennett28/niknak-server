@@ -9,6 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model representing a post made by a user
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Post extends Base {
     public static final int POST_TYPE = 0;

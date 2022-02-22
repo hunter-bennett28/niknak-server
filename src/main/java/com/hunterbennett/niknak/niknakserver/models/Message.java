@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A model represented a message sent between users
+ */
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Message extends Base {
     @PropertyName("Content")

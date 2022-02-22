@@ -29,6 +29,11 @@ public class ReportController {
         this.reportRepo = reportRepo;
     }
 
+    /**
+     * Gets a single report
+     * @param id - the ID of the report to get
+     * @return a Report object
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Report> getReport(@PathVariable(required = true, name = "id") String id) {
         try {
@@ -42,6 +47,10 @@ public class ReportController {
         }
     }
 
+    /**
+     * Gets all reports
+     * @return a List of all reports
+     */
     @GetMapping
     public ResponseEntity<List<Report>> getAllReports() {
         try {
@@ -52,6 +61,11 @@ public class ReportController {
         }
     }
 
+    /**
+     * Adds a report
+     * @param report - the report to add
+     * @return the added Report
+     */
     @PostMapping
     public ResponseEntity<Report> addReport(@RequestBody Report report) {
         try {
@@ -76,6 +90,11 @@ public class ReportController {
         }
     }
 
+    /**
+     * Deletes a report
+     * @param id - the ID of the report to delete
+     * @return true if it succeeds
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteReport(@PathVariable( required = true) String id) {
         try {
@@ -83,7 +102,7 @@ public class ReportController {
             return new ResponseEntity<>(reportRepo.delete(report), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to delet report: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

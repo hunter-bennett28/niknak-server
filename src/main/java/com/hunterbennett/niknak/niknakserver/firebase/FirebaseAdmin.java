@@ -15,11 +15,11 @@ import lombok.Getter;
 @Getter
 public class FirebaseAdmin {
     private static final String PROJECT_ID = "niknak-e2ea4";
-    // private static final String STORAGE_BUCKET = "niknak-e2ea4.appspot.com";
 
     private Firestore db;
 
     public FirebaseAdmin() throws Exception {
+        // Configure and initialize Firebase app
         FileInputStream serviceAccount = new FileInputStream("./src/main/java/com/hunterbennett/niknak/niknakserver/firebase/service-account.json");
         FirebaseOptions firebaseOptions = FirebaseOptions.builder()
             .setCredentials(GoogleCredentials.fromStream(serviceAccount))

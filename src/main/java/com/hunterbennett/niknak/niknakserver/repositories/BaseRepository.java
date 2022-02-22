@@ -71,16 +71,13 @@ public class BaseRepository {
 
     public <T extends Base> T get(String collection, T record, Class<T> classType) {
         try {
-            System.out.println("Collection: " + collection + " Getting id: " + record.getId());
             DocumentSnapshot documentSnapshot = firebase.getDb().collection(collection)
                 .document(record.getId()).get().get();
             if (documentSnapshot.exists()) {
                 T result = documentSnapshot.toObject(classType);
                 result.setId(record.getId());
-                System.out.println("Returning record: " + result.getClass());
                 return result;
             }
-            System.out.println("Returning null record");
             return null;
         } catch (Exception e) {
             LOG.error("Failed to get record from database: " + e.getMessage());
@@ -101,8 +98,6 @@ public class BaseRepository {
                     recordList.add(document);
                 }
             }
-            System.out.println("Getting from collection: " + collection);
-            System.out.println("Getting all of type: " + classType);
             return recordList;
         } catch (Exception e) {
             LOG.error("Failed to get records from database: " + e.getMessage());
@@ -119,15 +114,16 @@ public class BaseRepository {
             for (DocumentSnapshot documentSnapshot : querySnapshot) {
                 Conversation conversation = documentSnapshot.toObject(Conversation.class);
                 conversation.setId(documentSnapshot.getId());
-                for (UserChatTracker userChat : conversation.getUsers()) {
-                    if (userChat.getUserID() == userId) {
-                        conversations.add(conversation);
-                        break;
+                if (conversation.getUsers() != null) {
+                    for (UserChatTracker userChat : conversation.getUsers()) {
+                        if (userChat.getUserId().equals(userId)) {
+                            conversations.add(conversation);
+                            break;
+                        }
                     }
                 }
             }
-
-            return conversations.size() > 0 ? conversations : null;
+            return conversations;
         } catch (Exception e) {
             LOG.error("Failed to get user conversations from database: " + e.getMessage());
             return null;

@@ -1,18 +1,26 @@
 package com.hunterbennett.niknak.niknakserver.models;
 
+import com.google.cloud.firestore.annotation.PropertyName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @AllArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Message extends Base {
-    private String Content;
-    private String FromId;
-    private String ToId;
-    private String Type;
-    private long Timestamp;
+    @PropertyName("Content")
+    private String content;
+    @PropertyName("FromId")
+    private String fromId;
+    @PropertyName("ToId")
+    private String toId;
+    @PropertyName("Type")
+    private String type;
+    @PropertyName("Timestamp")
+    private long timestamp;
 
     public Message(String id) {
-        this.Id = id;
+        this.id = id;
     }
 }

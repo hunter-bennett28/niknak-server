@@ -3,6 +3,7 @@ package com.hunterbennett.niknak.niknakserver.models;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.cloud.firestore.annotation.PropertyName;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,14 +12,20 @@ import lombok.Setter;
 
 @Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Report extends Base {
-    private String UserID;
-    private String ReportedEntityID;
-    private String Reason;
-    private String Description;
-    private String Type;
-    private String Date;
+    @PropertyName("UserID")
+    private String userID;
+    @PropertyName("ReportedEntityID")
+    private String reportedEntityID;
+    @PropertyName("Reason")
+    private String reason;
+    @PropertyName("Description")
+    private String description;
+    @PropertyName("Type")
+    private String type;
+    @PropertyName("Date")
+    private String date;
 
     public Report(String id) {
-        this.Id = id;
+        this.id = id;
     }
 }

@@ -13,9 +13,7 @@ public class PostRepository implements IFirestoreRepository<Post> {
     private final ReportRepository reportRepo;
 
     public PostRepository(BaseRepository baseRepository, ReportRepository reportRepo) throws Exception {
-        // this.repo = new BaseRepository();
         this.repo = baseRepository;
-        // this.repo.setCollection(COLLECTION);
         this.reportRepo = reportRepo;
     }
 

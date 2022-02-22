@@ -8,7 +8,6 @@ import com.hunterbennett.niknak.niknakserver.models.Conversation;
 import com.hunterbennett.niknak.niknakserver.models.Post;
 import com.hunterbennett.niknak.niknakserver.models.Report;
 import com.hunterbennett.niknak.niknakserver.models.User;
-import com.hunterbennett.niknak.niknakserver.models.Post.PostTypes;
 import com.hunterbennett.niknak.niknakserver.repositories.ConversationRepository;
 import com.hunterbennett.niknak.niknakserver.repositories.PostRepository;
 import com.hunterbennett.niknak.niknakserver.repositories.ReportRepository;
@@ -17,7 +16,7 @@ import com.hunterbennett.niknak.niknakserver.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/posts")
 public class PostController {
@@ -56,7 +56,7 @@ public class PostController {
         }
         catch (Exception e) {
             LOG.error("Controller failed to get post: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -67,22 +67,29 @@ public class PostController {
         }
         catch (Exception e) {
             LOG.error("Controller failed to get user posts: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts(@RequestParam String search, @RequestParam String category, @RequestParam String colour,
-            @RequestParam int distance, @RequestParam String userId, @RequestParam PostTypes type ) {
+    public ResponseEntity<List<Post>> getAllPosts(
+            @RequestParam( required = false, defaultValue = "") String search,
+            @RequestParam( required = false, defaultValue = "") String category,
+            @RequestParam( required = false, defaultValue = "" ) String colour,
+            @RequestParam int distance,
+            @RequestParam String userId,
+            @RequestParam( required = false, defaultValue = "0" ) int type) {
         try {
+            System.out.println("Getting posts: " + search + " " + category + " " + colour + " " + distance + " " + userId + " " + type);
             List<Post> allPosts = postRepo.getAll();
-            List<String> colours = colour == null ? new ArrayList<>() : new ArrayList<>(Arrays.asList(colour.split(",")));
-            List<String> searchWords = search == null
+            List<String> colours = colour.isEmpty() ? new ArrayList<>() : new ArrayList<>(Arrays.asList(colour.split(",")));
+            List<String> searchWords = search.isEmpty()
                 ? new ArrayList<>()
-                // Filter out filler keywords to make matches more accurate
-                : new ArrayList<>(Arrays.asList(search.split(" "))).stream().filter(word -> {
-                    return !PostController.skippedKeywords.contains(word);
-                }).toList();
+                : new ArrayList<>(Arrays.asList(search.split(" ")));
+            // Filter out filler keywords to make matches more accurate
+            List<String> filteredSearchWords = searchWords.stream().filter(word -> {
+                return !PostController.skippedKeywords.contains(word);
+            }).toList();
 
             // Apply all other filters to list
             List<Post> filteredPosts = allPosts.stream().filter(post -> {
@@ -93,9 +100,9 @@ public class PostController {
                 if (post.getPostType() != type) return false;
 
                 // Only do complex queries if searching for Posts, Requests do not support extra meta data
-                if (type == PostTypes.Post) {
+                if (type == Post.POST_TYPE) {
                     // Check for category criteria match
-                    boolean categoryMatch = category == null || post.getCategory() == category;
+                    boolean categoryMatch = category.isEmpty() || post.getCategory().equals(category);
                     if (!categoryMatch) return false;
 
                     // Check for colour criteria match
@@ -113,9 +120,9 @@ public class PostController {
 
                     // Check search keywords
                     boolean searchMatch = true;
-                    if (searchWords.size() > 0) {
+                    if (filteredSearchWords.size() > 0) {
                         searchMatch = false;
-                        for (String w : searchWords){
+                        for (String w : filteredSearchWords){
                             if (post.getTitle().toLowerCase().contains(w) || post.getDescription().toLowerCase().contains(w)
                                     || (post.getTags() != null && post.getTags().contains(w.toLowerCase()))) {
                                 searchMatch = true;
@@ -156,7 +163,7 @@ public class PostController {
         }
         catch (Exception e) {
             LOG.error("Controller failed to get posts: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -167,7 +174,7 @@ public class PostController {
             return new ResponseEntity<>(postRepo.update(post), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to update post: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -197,7 +204,7 @@ public class PostController {
             return new ResponseEntity<>(postRepo.delete(post), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to delete post: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -211,7 +218,7 @@ public class PostController {
             return new ResponseEntity<>(postRepo.update(post), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to increment post views: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

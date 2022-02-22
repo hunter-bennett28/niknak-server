@@ -1,15 +1,20 @@
 package com.hunterbennett.niknak.niknakserver.models;
 
+import com.google.cloud.firestore.annotation.PropertyName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @AllArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class UserChatTracker extends Base {
-    private String UserID;
-    private long LastSeen;
+    @PropertyName("UserId")
+    private String userId;
+    @PropertyName("LastSeen")
+    private long lastSeen;
 
     public UserChatTracker(String id) {
-        this.Id = id;
+        this.id = id;
     }
 }

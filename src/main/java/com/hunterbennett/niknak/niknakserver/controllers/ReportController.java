@@ -1,10 +1,6 @@
 package com.hunterbennett.niknak.niknakserver.controllers;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-
-import com.google.firebase.database.core.Repo;
 import com.hunterbennett.niknak.niknakserver.models.Report;
 import com.hunterbennett.niknak.niknakserver.repositories.ReportRepository;
 import com.hunterbennett.niknak.niknakserver.util.NikNakUtils;
@@ -13,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/reports")
 public class ReportController {
@@ -37,11 +35,10 @@ public class ReportController {
             Report report = new Report();
             report.setId(id);
             report = reportRepo.get(report);
-            System.out.println("Got Report: " + report);
             return new ResponseEntity<Report>(reportRepo.get(report), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to get report: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -51,7 +48,7 @@ public class ReportController {
             return new ResponseEntity<>(reportRepo.getAll(), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to get reports: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,7 +72,7 @@ public class ReportController {
             return new ResponseEntity<>(reportRepo.add(report), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to add report: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -86,7 +83,7 @@ public class ReportController {
             return new ResponseEntity<>(reportRepo.delete(report), HttpStatus.OK);
         } catch (Exception e) {
             LOG.error("Controller failed to delet report: " + e.getMessage());
-            return null;
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

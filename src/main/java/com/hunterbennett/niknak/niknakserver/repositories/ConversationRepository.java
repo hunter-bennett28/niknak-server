@@ -13,7 +13,6 @@ public class ConversationRepository implements IFirestoreRepository<Conversation
     private final ReportRepository reportRepo;
 
     public ConversationRepository(BaseRepository baseRepository, ReportRepository reportRepo) throws Exception {
-        //this.repo = new BaseRepository(COLLECTION);
         this.repo = baseRepository;
         this.reportRepo = reportRepo;
     }

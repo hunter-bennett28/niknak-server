@@ -12,9 +12,7 @@ public class RatingsRepository implements IFirestoreRepository<Ratings> {
     private final BaseRepository repo;
 
     public RatingsRepository(BaseRepository baseRepository) throws Exception {
-        // this.repo = new BaseRepository(COLLECTION);
         this.repo = baseRepository;
-        // this.repo.setCollection(COLLECTION);
     }
 
     @Override

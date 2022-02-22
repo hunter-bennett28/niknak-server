@@ -22,9 +22,7 @@ public class UserRepository implements IFirestoreRepository<User> {
 
     public UserRepository(BaseRepository baseRepository, ConversationRepository conversationRepo, PostRepository postRepo,
             ReportRepository reportRepo) throws Exception {
-        // this.repo = new BaseRepository(COLLECTION);
         this.repo = baseRepository;
-        // this.repo.setCollection(COLLECTION);
         this.conversationRepo = conversationRepo;
         this.postRepo = postRepo;
         this.reportRepo = reportRepo;
@@ -36,7 +34,7 @@ public class UserRepository implements IFirestoreRepository<User> {
         if (user == null)
             return null;
 
-        user.setIsAdmin(Admin.adminIds.contains(user.getId()));
+        user.setAdmin(Admin.adminIds.contains(user.getId()));
         return user;
     }
 

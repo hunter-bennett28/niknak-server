@@ -2,27 +2,33 @@ package com.hunterbennett.niknak.niknakserver.models;
 
 import java.util.List;
 
+import com.google.cloud.firestore.annotation.PropertyName;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @AllArgsConstructor
+@Getter @Setter @AllArgsConstructor @NoArgsConstructor
 public class Conversation extends Base {
-    private String PostID;
-    private List<Message> Messages;
-    private List<UserChatTracker> Users;
+    @PropertyName("PostId")
+    private String postID;
+    @PropertyName("Messages")
+    private List<Message> messages;
+    @PropertyName("Users")
+    private List<UserChatTracker> users;
 
     public Conversation(String id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public void addMessage(Message message) {
-        this.Messages.add(message);
+        this.messages.add(message);
     }
 
     public void setUserRead(String userId) {
-        for (UserChatTracker userChat : Users) {
-            if (userChat.getUserID().equals(userId)) {
+        for (UserChatTracker userChat : users) {
+            if (userChat.getUserId().equals(userId)) {
                 userChat.setLastSeen(System.currentTimeMillis());
                 break;
             }

@@ -12,14 +12,11 @@ public class ReportRepository implements IFirestoreRepository<Report> {
     private final BaseRepository repo;
 
     public ReportRepository(BaseRepository baseRepository) throws Exception {
-        // this.repo = new BaseRepository(COLLECTION);
         this.repo = baseRepository;
-        // this.repo.setCollection(COLLECTION);
     }
 
     @Override
     public Report get(Report report) {
-        System.out.println("Getting report " + report.getId());
         return repo.get(COLLECTION, report, Report.class);
     }
 
